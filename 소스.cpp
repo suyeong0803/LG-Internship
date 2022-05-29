@@ -7,7 +7,7 @@ using namespace cv;
 int main()
 {
 	Mat img;
-	VideoCapture capture("Ocean - 74888.mp4");	// µ¿¿µ»ó ºÒ·¯¿À±â
+	VideoCapture capture("Ocean - 74888.mp4");	// ë™ì˜ìƒ ë¶ˆëŸ¬ì˜¤ê¸°
 
 	if (!capture.isOpened())
 	{
@@ -21,7 +21,8 @@ int main()
 	double fourcc = capture.get(CAP_PROP_FOURCC);
 
 	VideoWriter save;
-	save.open("save_video.mpeg", VideoWriter::fourcc('m', 'p', '2', 'v'), fps, Size(width, height), true);
+	save.open("save_video.mpeg", VideoWriter::fourcc('m', 'p', '2', 'v'), fps, Size(width, height), true);	// mpeg2 íŒŒì¼ë¡œ ë³€í™˜
+	save.open("save_video.mp4", VideoWriter::fourcc('m', 'p', '4', 'v'), fps, Size(width, height), true);	// mpeg4 íŒŒì¼ë¡œ ë³€í™˜
 
 	while (true)
 	{
