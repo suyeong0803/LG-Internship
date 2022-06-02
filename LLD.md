@@ -12,7 +12,7 @@
     - 2.3.1 [품질 속성](#231-품질-속성)
 
 - 3. [System Context](#3-system-context)
-- 
+
 - 4. [아키텍처 설계](#4-아키텍처-설계)
   - 4.1 [Static Perspectives](#41-static-perspectives)
     - 4.1.1 [First Decomposition Diagram](#411-first-decomposition-diagram)
