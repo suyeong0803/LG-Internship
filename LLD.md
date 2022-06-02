@@ -104,31 +104,16 @@
 
 ## 2.3 비기능적 요구사항
 
- 본 절에서는 **동영상 편집 프로그램**이 만족해야 하는 비기능적 요구 사항인 quality attribute (품질 요소)들에 대해서 기술한다.
-
- 
-
 ### 2.3.1 품질 속성
 
  
-
 | ID | 품질속성 | 설명 |
-
 |----|----------|------|
-
 |QA01| 정확성 | 제공하는 서비스는 사용자가 원하는 결과물과 실제 결과물이 동일해야 한다. |
-
 |QA02| 신뢰성 | 서비스가 비정상적으로 종료 시 사용자가 소유하고 있던 자료에 영향이 없어야 한다.|
-
 |QA03| 유지보수성 | 새로운 기능 추가 시 기존 프로그램에 영향이 없어야 한다. |
 
-|QA04| 사용편의성 | 사용자가 원하는 기능을 한눈에 알아볼 수 있어야 한다. |
-
- 
-
 <br>
-
- 
 
 # 3. System Context
 
@@ -136,32 +121,21 @@
 
 <br>
 
- 
-
 # 4. 아키텍처 설계
-
 ## 4.1 Static Perspectives
-
 ### 4.1.1 First Decomposition Diagram
-
 ![first_decomposition](uploads/cd59d5bb8567890335824e9acf056046/first_decomposition.png)
 
 ## 4.2 Dynamic Perspectives
-
 ### 4.2.1 Sequence Diagrams
-
 ![sequence_diagram](uploads/3f87c0d651053994d6485661da8f1f01/sequence_diagram.png)
 
 - Convert
-
 ![sequence_diagram_convert](uploads/5c034acae27b5424385e08497c6dca40/sequence_diagram_convert.png)
 
 - Merge
-
 ![sequence_diagram_merge](uploads/d99fb3522171772431b8c2466177eeef/sequence_diagram_merge.png)
 
 <br>
-
- 
 
 # 5. 참고
