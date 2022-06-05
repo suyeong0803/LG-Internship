@@ -25,5 +25,21 @@
 
 <br>
 
+## CI/CD와 DevOps
+
+- CI/CD는 [DevOps](DevOps)를 보완
+- CI/CD 파이프라인을 통해 변경 사항을 빠르게 푸시하는 동시에 안정성 보장
+
+<br>
+
+## CI/CD 워크플로우
+
+1. CI/CD 파이프라인 **구축** : 개발자가 완성된 소프트웨어 솔루션을 제공하기 위해 취해야 하는 모든 단계
+   - 소프트웨어 소싱 , 빌드 , 테스트 , 배포
+3. CI/CD 파이프라인 **자동화** : 파이프라인을 버전관리 및 소스 통제 시스템에 연결
+![image](https://user-images.githubusercontent.com/77713203/172048177-715dab2a-5a5b-4be4-b7cc-45f8f101727a.png)
+
+
 ## 참조
 - [https://www.redhat.com/ko/topics/devops/what-is-ci-cd](https://www.redhat.com/ko/topics/devops/what-is-ci-cd)
+- [https://www.servicenow.kr/products/devops/what-is-cicd.html](https://www.servicenow.kr/products/devops/what-is-cicd.html)
