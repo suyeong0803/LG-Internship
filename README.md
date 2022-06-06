@@ -12,3 +12,8 @@
 - 함수 길면 안 되고
 - 기능 시작할 때나 함수 위에, 중요한 데에 주석 달아주기
 - 쓸데없이 줄 띄우지 말고
+
+6/3 - 6/6
+- converter 모듈화 -> interface 따로 빼서 MPEG2 & MPEG4로 나눔
+- UI 제작 -> Windows Api 사용해서 간단하게 만듦
+- video1, video2도 클래스 모듈화 해서 그 안에 path랑 type 저장해 두고 check 함수 부르도록 수정
