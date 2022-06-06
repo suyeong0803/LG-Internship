@@ -17,3 +17,8 @@
 - converter 모듈화 -> interface 따로 빼서 MPEG2 & MPEG4로 나눔
 - UI 제작 -> Windows Api 사용해서 간단하게 만듦
 - video1, video2도 클래스 모듈화 해서 그 안에 path랑 type 저장해 두고 check 함수 부르도록 수정
+- boost 라이브러리 사용해 file extension 이나 file.exist 같은 거 썼음
+    - boost 다운로드 -> bat 파일 다운로드 -> exe 파일 다운로드 -> c++ 일반 추가 디렉토리 C:\Users\원수영\Desktop\project\boost_1_79_0 -> 링커 일반 추가 라이브러리 stage\lib
+- GUI
+  - 속성 -> 고급 -> 문자집합 -> 멀티바이트
+  - 링커 -> 시스템 -> 하위시스템 -> 창
