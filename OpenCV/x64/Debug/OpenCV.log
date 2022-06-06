@@ -1,0 +1,4 @@
+﻿  GUI.cpp
+C:\Users\원수영\source\repos\OpenCV\OpenCV\MyConverter.h(2,1): warning C4005: 'interface': 매크로 재정의
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um\combaseapi.h(169): message : 'interface'의 이전 정의를 참조하십시오.
+  OpenCV.vcxproj -> C:\Users\원수영\source\repos\OpenCV\x64\Debug\OpenCV.exe
