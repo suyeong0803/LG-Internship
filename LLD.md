@@ -2,7 +2,6 @@
 
 - 1. [프로젝트 개요](#1-프로젝트-개요)
   - 1.1 [프로젝트 목적](#11-프로젝트-개요)
-  - 1.2 [용어 정의](#12-용어-정의)
 
 - 2. [아키텍쳐 드라이버](#2-아키텍쳐-드라이버)
   - 2.1 [제약사항](#21-제약사항)
@@ -16,10 +15,9 @@
 - 4. [아키텍처 설계](#4-아키텍처-설계)
   - 4.1 [Static Perspectives](#41-static-perspectives)
     - 4.1.1 [First Decomposition Diagram](#411-first-decomposition-diagram)
-  - 4.2 [Dynamic Perspectives](#42-dynamic-perspectives)
+    - 4.1.2 [Second Decomposition Diagram](#411-second-decomposition-diagram)  
+- 4.2 [Dynamic Perspectives](#42-dynamic-perspectives)
     - 4.2.1 [Sequence Diagrams](#421-sequence-diagrams)
-
-- 5. [참고](#5-참고)
 
 <br>
 
@@ -28,18 +26,13 @@
 ## 1.1 프로젝트 목적
 
 본 프로젝트의 목적은 MPEG2 형식의 TV 녹화 영상을 MPEG4 형식으로 **변환**하고 영상을 **병합**하여 숏폼 컨텐츠로 제작하여 영상처리 기술을 경험한다.
-그 중 **변환** 기능을 중점으로 진행된다.
+그 중 **변환** 기능을 중점으로 기술한다.
  
-
-## 1.2 용어 정의
-
-[ 용어 정리 ]
-
 <br>
 
 # 2. 아키텍쳐 드라이버
 
-본 절에서는 High-Level Functional Requirements로부터 **동영상 편집 프로그램**에 대한 기술적 제약사항(business-/technical- constraints), 기능 요구사항(functional requirements), 그리고 품질 요소(quality attribute)로 구성된 아키텍쳐 드라이버(architectural drivers)에 관해 기술한다. 
+본 절에서는 High-Level Functional Requirements로부터 **동영상 편집 프로그램**에 대한 기술적 제약사항(technical- constraints), 기능 요구사항(functional requirements), 그리고 품질 요소(quality attribute)로 구성된 아키텍쳐 드라이버(architectural drivers)에 관해 기술한다. 
 
 ## 2.1 제약사항
 
@@ -57,24 +50,24 @@
 ### [FR01] 불러오기
 
 | 항목 | 내용 |
-|------|-----|
+|------|------|
 | 기본 동작 | 사용자가 원하는 파일을 불러온다. |
 | 선행 조건 | - |
 | 후행 조건 | 프로그램에 영상이 올라간다.|
-| 기본 시나리오 | 1. 원하는 파일의 경로를 입력한다. <br>  |
+| 기본 시나리오 | 1. 원하는 파일의 경로를 입력한다. <br> 2. 'check' 버튼을 누른다. |
 | 대안 시나리오 | - |
-| 예외 처리 | 1. **잘못된 경로**일 경우 "동영상을 찾을 수 없습니다. 파일 경로를 확인해주세요." 알림 메세지를 띄운다. |
+| 예외 처리 | 1. **잘못된 경로**일 경우, "Please Check Your File Path!" 알림 메세지를 띄운다. <br> 2. 파일 경로가 **디렉토리**일 경우, "It is Directory!" 알림 메세지를 띄운다. <br> 3. 파일 확장자가 **mpg, mp4**가 아닐 경우, "Please Check File Extension!" 알림 메세지를 띄운다. <br> 4. 파일 경로를 **입력하지 않은** 경우, "Please Insert File Path!" 알림 메세지를 띄운다.|
 
 ### [FR02] 변환
 
 | 항목 | 내용 |
 |------|-----|
 | 기본 동작 | 파일 형식을 변환한다. |
-| 선행 조건 | 변환할 영상이 존재해야 한다. |
+| 선행 조건 | 파일 경로를 입력한다. |
 | 후행 조건 | 파일 형식이 변환된다. |
-| 기본 시나리오 | 1. 변환을 요청한다. <br> 2. 기존 파일이 **MPEG4** 형식일 경우, 파일이 MPEG2로 변환된다. <br> 3. 기존 파일이 **MPEG2** 형식일 경우, 파일이 MPEG4로 변환된다. |
+| 기본 시나리오 | 1. 변환을 요청한다. <br> 2. 변환 형식을 선택한다. <br> 3. 선택한 형식으로 변환한다. |
 | 대안 시나리오 | - |
-| 예외 처리 | 1. MPEG2, MPEG4 외 형식의 파일일 경우, "파일 형식이 잘못되었습니다." 알림 메세지를 띄운다. |
+| 예외 처리 | 1. 변환 요청과 현재 **타입이 같은** 경우, "already TYPE!" 알림 메세지를 띄운다. (TYPE : 선택한 형식) <br> 2. 파일의 **유효 여부**를 검사하지 않은 경우, "Please Press Check Button!" 알림 메세지를 띄운다. <br> 3. 변환 **형식을 선택하지 않은** 경우, "Please Check Converting Type!" 알림 메세지를 띄운다. |
 
 ### [FR03] 병합
 
@@ -114,9 +107,6 @@
 <br>
 
 # 3. System Context
-
-![system_context](uploads/85a2f7e2d08cab3414cb821aebb11d59/system_context.png)
-
 <br>
 
 # 4. 아키텍처 설계
@@ -124,16 +114,18 @@
 ### 4.1.1 First Decomposition Diagram
 ![first_decomposition](uploads/cd59d5bb8567890335824e9acf056046/first_decomposition.png)
 
+### 4.1.2 Second Decomposition Diagram
+#### Convert
+![second_decomposition](uploads/7088593a14496ab325a5b7f6deca8674/second_decomposition.png)
+
 ## 4.2 Dynamic Perspectives
 ### 4.2.1 Sequence Diagrams
-![sequence_diagram](uploads/3f87c0d651053994d6485661da8f1f01/sequence_diagram.png)
-
-- Convert
-![sequence_diagram_convert](uploads/5c034acae27b5424385e08497c6dca40/sequence_diagram_convert.png)
+#### Convert
+![sequence_diagram_convert](uploads/c1d200c099462dd5506fce64244d25f8/sequence_diagram_convert.png)
 
 - Merge
+
 ![sequence_diagram_merge](uploads/d99fb3522171772431b8c2466177eeef/sequence_diagram_merge.png)
 
 <br>
 
-# 5. 참고
