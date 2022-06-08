@@ -56,6 +56,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
     PAINTSTRUCT ps;
+    OPENFILENAME OFN;
+    TCHAR filePathName[100] = "";
+    TCHAR lpstrFile[100] = "";
+    static TCHAR filter[] = "모든 파일\0*.*\0MPEG2 파일\0*.mpg\0MPEG4 파일\0*.mp4";
+
+
+
+    memset(&OFN, 0, sizeof(OPENFILENAME));
+    OFN.lStructSize = sizeof(OPENFILENAME);
+    OFN.hwndOwner = hWnd;
+    OFN.lpstrFilter = filter;
+    OFN.lpstrFile = lpstrFile;
+    OFN.nMaxFile = 100;
+    OFN.lpstrInitialDir = ".";
+
     switch (iMessage) {
     case WM_CREATE:
         hWndMain = hWnd;
@@ -71,7 +86,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
             150, 130, 250, 25,
             hWnd, (HMENU)ID_TEXT_VIDEO_1, g_hInst, NULL);
 
-        uploadButton[0] = CreateWindow(TEXT("button"), TEXT("확인"), WS_CHILD | WS_VISIBLE | WS_BORDER,
+        uploadButton[0] = CreateWindow(TEXT("button"), TEXT("파일 열기"), WS_CHILD | WS_VISIBLE | WS_BORDER,
             410, 130, 80, 25,
             hWnd, (HMENU)ID_BUTTON_VIDEO_1, g_hInst, NULL);
 
@@ -83,7 +98,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
             150, 160, 250, 25,
             hWnd, (HMENU)ID_TEXT_VIDEO_2, g_hInst, NULL);
 
-        uploadButton[1] = CreateWindow(TEXT("button"), TEXT("확인"), WS_CHILD | WS_VISIBLE | WS_BORDER,
+        uploadButton[1] = CreateWindow(TEXT("button"), TEXT("파일 열기"), WS_CHILD | WS_VISIBLE | WS_BORDER,
             410, 160, 80, 25,
             hWnd, (HMENU)ID_BUTTON_VIDEO_2, g_hInst, NULL);
 
@@ -110,10 +125,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
      case WM_COMMAND:
         switch (LOWORD(wParam)) {
         case ID_BUTTON_VIDEO_1:
-            GetWindowText(textBox[0], GetVideo1Path, 128);
-            if (validation->isExisted(GetVideo1Path) == FILE_EXISTS) {
-                filePath1 = GetVideo1Path;
-                MessageBox(hWnd, "성공", TEXT("결과"), MB_OK);
+            
+            if (GetOpenFileName(&OFN) != 0) {
+                SetWindowText(textBox[0], TEXT(OFN.lpstrFile));
+                filePath1 = OFN.lpstrFile;
             }
             else {
                 MessageBox(hWnd, "파일이 존재하지 않습니다. 경로를 다시 확인해주세요", TEXT("Alert"), MB_OK);
@@ -122,13 +137,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
             return 0;
 
         case ID_BUTTON_VIDEO_2:
-            GetWindowText(textBox[1], GetVideo2Path, 128);
-            if (validation->isExisted(GetVideo2Path) == FILE_EXISTS) {
-                filePath2 = GetVideo2Path;
-                MessageBox(hWnd, "성공", TEXT("결과"), MB_OK);
+            if (GetOpenFileName(&OFN) != 0) {
+                SetWindowText(textBox[1], TEXT(OFN.lpstrFile));
+                GetWindowText(textBox[1], GetVideo1Path, 128);
+                filePath2 = OFN.lpstrFile;
             }
             else {
                 MessageBox(hWnd, "파일이 존재하지 않습니다. 경로를 다시 확인해주세요", TEXT("Alert"), MB_OK);
+                SetWindowText(textBox[1], "");
             }
             return 0;
 
