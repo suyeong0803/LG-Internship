@@ -1,261 +1,144 @@
-#include <stdio.h>
-#include <iostream>
-#include <string>
-#include <filesystem>
+#include "concatFiles.h"
 
-#include <vector>
+// output 파일 초기화 수정해야 함!
 
-#include"videoInfo.h"
-
-extern "C"
+void concat(std::vector<videoInfo> folder)
 {
-#include "libavcodec/avcodec.h"
-#include "libavformat/avformat.h"
-#include "libavutil/mem.h"
-}
+	AVOutputFormat* ofmt = NULL;
+	AVFormatContext* ifmt_ctx = NULL, * ofmt_ctx = NULL;
+	int ret, i;
 
-
-
-#pragma comment(lib, "avformat.lib")
-#pragma comment(lib, "avcodec.lib")
-#pragma comment(lib, "avutil.lib")
-
-char* timeToString(struct tm* t) {
-	static char s[20];
-
-	sprintf(s, "%04d-%02d-%02d %02d:%02d:%02d",
-		t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
-		t->tm_hour, t->tm_min, t->tm_sec
-	);
-
-	return s;
-}
-
-void saveVideoInfo()
-{
-	std::string path = "D:\\00000003REC";
-	for (const auto& file : std::filesystem::directory_iterator(path))
+	int64_t last_pts = 0, last_dts = 0;
+	int64_t duration = 0;
+	for (int f = 0; f < folder.size(); f++)
 	{
-		std::string f = file.path().string();
-		const char* szFilePath = f.c_str();
-
-		int ret;
-		AVFormatContext* m_context = NULL;
-
-		ret = avformat_open_input(&m_context, szFilePath, NULL, NULL);
-		if (ret != 0)
+		std::cout << folder[f].m_path.c_str() << std::endl;
+		
+		ifmt_ctx = NULL;
+		if ((ret = avformat_open_input(&ifmt_ctx, folder[f].m_path.c_str(), 0, 0)) < 0)
 		{
-			av_log(NULL, AV_LOG_ERROR, "File [%s] Open Fail (ret %d)\n", szFilePath, ret);
+			fprintf(stderr, "Can't open file");
 			exit(-1);
 		}
 
-		struct _stat buf;
-		std::string createDate;
-		if (_stat(szFilePath, &buf) != 0) {
-			switch (errno) {
-			case ENOENT:
-				fprintf(stderr, "File %s not found.\n", szFilePath); break;
-			case EINVAL:
-				fprintf(stderr, "Invalid parameter to _stat.\n"); break;
-			default:
-				fprintf(stderr, "Unexpected error in _stat.\n");
-			}
-		}
-		else {
-			createDate = timeToString(localtime(&buf.st_mtime));
-		}
-
-		ret = avformat_find_stream_info(m_context, NULL);
-		if (ret < 0)
+		if ((ret = avformat_find_stream_info(ifmt_ctx, 0)) < 0)
 		{
-			av_log(NULL, AV_LOG_ERROR, "File [%s] Open Stream Fail (ret %d)\n", szFilePath, ret);
+			fprintf(stderr, "fail to stream info");
 			exit(-1);
 		}
 
-		AVCodec* vcodec = NULL;
-		ret = av_find_best_stream(m_context, AVMEDIA_TYPE_VIDEO, -1, -1, &vcodec, 0);
-		if (ret < 0)
+		av_dump_format(ifmt_ctx, 0, folder[f].m_path.c_str(), 0);
+
+		avformat_alloc_output_context2(&ofmt_ctx, NULL, NULL, "output.mp4");
+
+		if (!ofmt_ctx)
 		{
-			av_log(NULL, AV_LOG_ERROR, "File [%s] Open best stream Fail (ret %d)\n", szFilePath, ret);
+			fprintf(stderr, "can't create output");
 			exit(-1);
 		}
 
-		const int idx = ret;
-		AVStream* vstrm = m_context->streams[idx];
+		ofmt = ofmt_ctx->oformat;
 
-		videoInfo video = { szFilePath, av_rescale_q(vstrm->duration, vstrm->time_base, { 1,1000 }) / 1000., createDate };
-
-		folder.push_back(video);
-	}
-}
-
-int main(int argc, char* argv[])
-{
-    AVStream*        m_iVstream = NULL;
-    AVFormatContext* m_oFcontext;
-    AVStream*        m_oVstream;
-
-    avcodec_register_all();
-    av_register_all();
-
-	int ret;
-	AVFormatContext* m_iFcontext = NULL;
-
-	/*const char* filePath[15][256];
-	std::string path = "D:\\00000003REC";
-	int i = 0;
-
-	for (const auto& file : std::filesystem::directory_iterator(path))
-	{
-		std::string f = file.path().string();
-		filePath[i] = f.c_str();
-		std::cout << i << " : " << filePath[i++] << std::endl;
-	}*/
-
-	saveVideoInfo();
-
-	/*for (int i = 0; i < 13; i++) 
-		std::cout << i << " : " << filePath[i] << std::endl;*/
-
-	ret = avformat_open_input(&m_iFcontext, folder[0].m_path.c_str(), NULL, NULL);
-	if (ret != 0)
-	{
-		fprintf(stderr, "could not open input file\n");
-		exit(-1);
-	}
-
-	ret = avformat_find_stream_info(m_iFcontext, NULL);
-	if (ret < 0)
-	{
-		fprintf(stderr, "could not find stream info\n");
-		exit(-1);
-	}
-
-
-	for (unsigned int i = 0; i < m_iFcontext->nb_streams; i++)
-	{
-		if (m_iFcontext->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO)
+		AVStream* in_stream = NULL, * out_stream = NULL;
+		for (i = 0; i < ifmt_ctx->nb_streams; i++)
 		{
-			m_iVstream = m_iFcontext->streams[i];
-			break;
-		}
-	}
+			in_stream = ifmt_ctx->streams[i];
+			out_stream = avformat_new_stream(ofmt_ctx, in_stream->codec->codec);
 
-
-	if (m_iVstream == NULL)
-	{
-		fprintf(stderr, "didn't find any video stream\n");
-		exit(-1);
-	}
-
-	avformat_alloc_output_context2(&m_oFcontext, NULL, NULL, "output.mp4");
-
-
-	m_oVstream = avformat_new_stream(m_oFcontext, 0);
-	AVCodecContext* c = m_oVstream->codec;
-
-
-	c->bit_rate = 400000;
-	c->codec_id = m_iVstream->codec->codec_id;
-	c->codec_type = m_iVstream->codec->codec_type;
-	c->time_base.num = m_iVstream->time_base.num;
-	c->time_base.den = m_iVstream->codec->time_base.den;
-	c->width = m_iVstream->codec->width;
-	c->height = m_iVstream->codec->height;
-	c->pix_fmt = m_iVstream->codec->pix_fmt;
-	c->flags = m_iVstream->codec->flags;
-	c->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
-	c->me_range = m_iVstream->codec->me_range;
-	c->max_qdiff = m_iVstream->codec->max_qdiff;
-
-	c->qmin = m_iVstream->codec->qmin;
-	c->qmax = m_iVstream->codec->qmax;
-
-	c->qcompress = m_iVstream->codec->qcompress;
-
-	c->extradata = m_iVstream->codec->extradata;
-	c->extradata_size = m_iVstream->codec->extradata_size;
-	
-
-	//avio_open(&m_oFcontext->pb, NULL, AVIO_FLAG_WRITE);
-
-	//avformat_write_header(m_oFcontext, NULL);
-
-	int last_pts = 0;
-	int last_dts = 0;
-
-	for (int i = 0; i < folder.size(); i++)
-	{
-		std::cout << i << std::endl;
-		m_iFcontext = NULL;
-		if (avformat_open_input(&m_iFcontext, folder[i].m_path.c_str(), NULL, NULL) != 0)
-		{
-			fprintf(stderr, "could not open input file\n");
-			return -1;
-		}
-
-		if (avformat_find_stream_info(m_iFcontext, NULL) < 0)
-		{
-			fprintf(stderr, "could not find stream\n");
-			return -1;
-		}
-		av_dump_format(m_iFcontext, 0, folder[i].m_path.c_str(), 0);
-
-		m_iVstream = NULL;
-		for (unsigned s = 0; s < m_iFcontext->nb_streams; s++)
-		{
-			if (m_iFcontext->streams[s]->codec->codec_type == AVMEDIA_TYPE_VIDEO)
+			if (!out_stream)
 			{
-				m_iVstream = m_iFcontext->streams[s];
-				break;
+				fprintf(stderr, "fail output stream");
+				exit(-1);
 			}
-		}
-		if (m_iVstream == NULL)
-		{
-			fprintf(stderr, "didn't find any video stream\n");
-			return -1;
+
+			ret = avcodec_copy_context(out_stream->codec, in_stream->codec);
+			if (ret < 0)
+			{
+				fprintf(stderr, "fail to copy context");
+				exit(-1);
+			}
+
+			out_stream->codec->codec_tag = 0;
+			if (ofmt_ctx->oformat->flags & AVFMT_GLOBALHEADER)
+				out_stream->codec->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 		}
 
-		int64_t pts, dts;
+		av_dump_format(ofmt_ctx, 0, "output.mp4", 1);
+		if (!(ofmt->flags & AVFMT_NOFILE))
+		{
+			ret = avio_open(&ofmt_ctx->pb, "output.mp4", AVIO_FLAG_WRITE);
+			if (ret < 0)
+			{
+				fprintf(stderr, "can't open output file");
+				exit(-1);
+			}
+		}
+
+		ret = avformat_write_header(ofmt_ctx, NULL);
+		if (ret < 0)
+		{
+			fprintf(stderr, "error opening output");
+			exit(-1);
+		}
+
+		// 8 = start time
+		ret = av_seek_frame(ifmt_ctx, -1, NULL, AVSEEK_FLAG_ANY);
+		if (ret < 0)
+		{
+			fprintf(stderr, "error seek");
+			exit(-1);
+		}
+
+		int64_t pts = 0, dts = 0;
+		last_pts += duration;
+		last_dts += duration;
 
 		while (1)
 		{
-			AVPacket m_iPkt;
-			av_init_packet(&m_iPkt);
-			m_iPkt.size = 0;
-			m_iPkt.data = NULL;
+			AVPacket pkt = { 0 };
+			av_init_packet(&pkt);
 
-			if (av_read_frame(m_iFcontext, &m_iPkt) < 0) break;
-			std::cout << m_iPkt.size << std::endl;
+			ret = av_read_frame(ifmt_ctx, &pkt);
+			if (ret < 0) break;
 
-			m_iPkt.flags |= AV_PKT_FLAG_KEY;
+			in_stream = ifmt_ctx->streams[pkt.stream_index];
+			out_stream = ofmt_ctx->streams[pkt.stream_index];
 
-			pts = m_iPkt.pts;
-			m_iPkt.pts += last_pts;
+			pts = pkt.pts;
+			dts = pkt.dts;
+			duration = pkt.duration;
 
-			dts = m_iPkt.dts;
-			m_iPkt.dts += last_dts;
+			pkt.pts = av_rescale_q_rnd(pkt.pts, in_stream->time_base, out_stream->time_base, (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX)) + last_pts;
+			pkt.dts = av_rescale_q_rnd(pkt.dts, in_stream->time_base, out_stream->time_base, (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX)) + last_dts;
 
-			m_iPkt.stream_index = 0;
+			if (pkt.pts < 0) pkt.pts = 0;
+			if (pkt.dts < 0) pkt.dts = 0;
 
-			static int num = 1;
-			printf("frame %d\n", num++);
+			pkt.duration = av_rescale_q((int64_t)pkt.duration, in_stream->time_base, out_stream->time_base);
+			pkt.pos = -1;
 
-			av_interleaved_write_frame(m_oFcontext, &m_iPkt);
+			printf("last_pts : %lld / pts : %lld / dts : %lld / duration : %lld\n", last_pts, pkt.pts, pkt.dts, pkt.duration);
+
+			ret = av_interleaved_write_frame(ofmt_ctx, &pkt);
+			if (ret < 0)
+			{
+				fprintf(stderr, "error muxing packet");
+				break;
+			}
+			av_free_packet(&pkt);
+
 		}
 		last_dts += dts;
 		last_pts += pts;
 
-		avformat_close_input(&m_iFcontext);
+		av_write_trailer(ofmt_ctx);
 	}
 
-	av_write_trailer(m_oFcontext);
-	avcodec_close(m_oFcontext->streams[0]->codec);
-	av_freep(&m_oFcontext->streams[0]->codec);
-	av_freep(&m_oFcontext->streams[0]);
+	avcodec_close(ofmt_ctx->streams[0]->codec);
+	av_freep(&ofmt_ctx->streams[0]->codec);
+	av_freep(&ofmt_ctx->streams[0]);
 
-	avio_close(m_oFcontext->pb);
-	av_free(m_oFcontext);
-
-	return 0;
+	avio_close(ofmt_ctx->pb);
+	av_free(ofmt_ctx);
 }
+

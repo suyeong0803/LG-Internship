@@ -1,30 +1,4 @@
-extern "C"
-{
-#include "libswscale/swscale.h"
-#include "libavformat/avformat.h"
-#include "libavformat/avio.h"
-#include "libavcodec/avcodec.h"
-#include "libavutil/log.h"
-}
-
-#include <iostream>
-#include <string>
-#include <filesystem>
-
-#include <sys/stat.h>
-#include <time.h>
-
-#include <vector>
-
-#include "videoInfo.h"
-
-#pragma warning(disable:4996)
-
-#pragma comment(lib, "avformat.lib")
-#pragma comment(lib, "avcodec.lib")
-#pragma comment(lib, "swscale.lib")
-#pragma comment(lib, "avutil.lib")
-
+#include "saveInfo.h"
 char* timeToString(struct tm* t) {
 	static char s[20];
 
@@ -41,9 +15,10 @@ bool compare(videoInfo a, videoInfo b)
 	return a.m_createDate < b.m_createDate;
 }
 
-int main()
+std::vector<videoInfo> save(std::string filePath)
 {
-	std::string path = "D:\\00000003REC";
+	std::vector<videoInfo> folder;
+	std::string path = filePath;
 	for (const auto& file : std::filesystem::directory_iterator(path))
 	{
 		std::string f = file.path().string();
@@ -106,7 +81,7 @@ int main()
 		folder.push_back(video);
 		std::cout << std::endl;
 	}
-	
+
 	sort(folder.begin(), folder.end(), compare);
-	for (int i = 0; i < folder.size(); i++) std::cout << folder[i].m_path <<" " << folder[i].m_duration << " " << folder[i].m_createDate << std::endl;
+	return folder;
 }

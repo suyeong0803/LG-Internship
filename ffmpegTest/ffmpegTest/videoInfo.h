@@ -8,5 +8,3 @@ public:
 	double m_duration;
 	std::string m_createDate;
 };
-
-std::vector<videoInfo> folder = std::vector<videoInfo>();
