@@ -1,12 +1,11 @@
 #include "splitFiles.h"
 
-void split(std::string filePath)
+void split(int start_time, int end_time, std::string filePath)
 {
 	AVOutputFormat* ofmt = NULL;
 	AVFormatContext* ifmt_ctx = NULL, * ofmt_ctx = NULL;
 	int ret, i;
 
-	ifmt_ctx = NULL;
 	if ((ret = avformat_open_input(&ifmt_ctx, filePath.c_str(), 0, 0)) < 0)
 	{
 		fprintf(stderr, "Can't open file");
@@ -50,6 +49,7 @@ void split(std::string filePath)
 			exit(-1);
 		}
 
+		out_stream->time_base = in_stream->time_base;
 		out_stream->codec->codec_tag = 0;
 		if (ofmt_ctx->oformat->flags & AVFMT_GLOBALHEADER)
 			out_stream->codec->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
@@ -74,18 +74,16 @@ void split(std::string filePath)
 	}
 
 	// 8 = start time
-	ret = av_seek_frame(ifmt_ctx, -1, 8 * AV_TIME_BASE, AVSEEK_FLAG_ANY);
+	ret = av_seek_frame(ifmt_ctx, -1, start_time * AV_TIME_BASE, AVSEEK_FLAG_ANY);
 	if (ret < 0)
 	{
 		fprintf(stderr, "error seek");
 		exit(-1);
 	}
 
-	int64_t* dts_start_from = new int64_t(sizeof(int64_t) * ifmt_ctx->nb_streams);
-	memset(dts_start_from, 0, sizeof(int64_t) * ifmt_ctx->nb_streams);
-	int64_t* pts_start_from = new int64_t(sizeof(int64_t) * ifmt_ctx->nb_streams);
-	memset(pts_start_from, 0, sizeof(int64_t) * ifmt_ctx->nb_streams);
-
+	int stream_mapping_size = 0;
+	int64_t* start_from = new int64_t(sizeof(int64_t) * ifmt_ctx->nb_streams);
+	memset(start_from, NULL, sizeof(int64_t) * ifmt_ctx->nb_streams);
 	while (1)
 	{
 		AVPacket pkt = { 0 };
@@ -97,28 +95,26 @@ void split(std::string filePath)
 		in_stream = ifmt_ctx->streams[pkt.stream_index];
 		out_stream = ofmt_ctx->streams[pkt.stream_index];
 
-		if (av_q2d(in_stream->time_base) * pkt.pts > 30) {
+		if (av_q2d(in_stream->time_base) * pkt.pts > end_time) {
 			av_free_packet(&pkt);
 			break;
 		}
 
-		if (dts_start_from[pkt.stream_index] == 0) {
-			dts_start_from[pkt.stream_index] = pkt.dts;
-		}
-		if (pts_start_from[pkt.stream_index] == 0) {
-			pts_start_from[pkt.stream_index] = pkt.pts;
+		if (start_from[pkt.stream_index] == 0)
+		{
+			int64_t dts = pkt.dts;
+			int64_t pts = pkt.pts;
+			int64_t min_ts = dts > pts ? pts : dts;
+			start_from[pkt.stream_index] = min_ts < 0 ? 0 : min_ts;
 		}
 
-		pkt.pts = av_rescale_q_rnd(pkt.pts - pts_start_from[pkt.stream_index], in_stream->time_base, out_stream->time_base, (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
-		pkt.dts = av_rescale_q_rnd(pkt.dts - dts_start_from[pkt.stream_index], in_stream->time_base, out_stream->time_base, (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
-
-		if (pkt.pts < 0) pkt.pts = 0;
-		if (pkt.dts < 0) pkt.dts = 0;
+		pkt.pts = av_rescale_q_rnd(pkt.pts - start_from[pkt.stream_index], in_stream->time_base, out_stream->time_base, (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
+		pkt.dts = av_rescale_q_rnd(pkt.dts - start_from[pkt.stream_index], in_stream->time_base, out_stream->time_base, (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
 
 		pkt.duration = av_rescale_q((int64_t)pkt.duration, in_stream->time_base, out_stream->time_base);
 		pkt.pos = -1;
 
-		printf("pts : %lld / dts : %lld / duration : %lld\n", pkt.pts, pkt.dts, pkt.duration);
+		//printf("pts : %lld / dts : %lld / duration : %lld\n", pkt.pts, pkt.dts, pkt.duration);
 
 		ret = av_interleaved_write_frame(ofmt_ctx, &pkt);
 		if (ret < 0)
@@ -140,4 +136,3 @@ void split(std::string filePath)
 	avio_close(ofmt_ctx->pb);
 	av_free(ofmt_ctx);
 }
-

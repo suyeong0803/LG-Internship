@@ -11,5 +11,7 @@ int main()
 	std::vector<videoInfo> folder = std::vector<videoInfo>();
 	folder = save("test");
 	//concat(folder);
-	split("test\\file_example_MP4_480_1_5MG.mp4");
+
+	int start_time, end_time;
+	split(15, 45, "test\\sample-mp4-file.mp4");
 }

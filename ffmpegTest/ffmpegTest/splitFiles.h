@@ -17,4 +17,4 @@ extern "C"
 #include "videoInfo.h"
 #include <string>
 
-void split(std::string filePath);
+void split(int start_time, int end_time, std::string filePath);
