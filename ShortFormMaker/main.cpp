@@ -9,10 +9,9 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+    const QUrl url(u"qrc:/ShortFormMaker/main.qml"_qs);
     VideoEditorViewModel ve;
-    //qmlRegisterType<VideoEditorViewModel>("ViewModel",1,0,"VideoEditorViewModel");
     engine.rootContext()->setContextProperty("VideoEditorViewModel", &ve);
-    const QUrl url(u"qrc:/VideoEditor/main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)

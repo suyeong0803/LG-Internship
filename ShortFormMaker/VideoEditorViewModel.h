@@ -21,9 +21,10 @@ public:
         Q_INVOKABLE void setFileList(QString str);
         Q_INVOKABLE void setInputInfo(QString str);
         Q_INVOKABLE QString inputInfo();
-        Q_INVOKABLE void setRangeSlider(double from,double to);
-        Q_INVOKABLE double fromRangeSlider();
-        Q_INVOKABLE double toRangeSlider();
+        Q_INVOKABLE void setRangeSlider(double duration);
+        Q_INVOKABLE double rangeSliderDuration();
+//        Q_INVOKABLE double fromRangeSlider();
+//        Q_INVOKABLE double toRangeSlider();
 //        Q_INVOKABLE int getListSize();
 //        Q_INVOKABLE QString getListName(int index);
 //        Q_INVOKABLE QString getListPath(int index);
@@ -37,8 +38,7 @@ signals:
     void rangeSliderChanged();
 private:
     QString m_inputInfo;
-    double m_rangeSliderFrom;
-    double m_rangeSliderTo;
+    double m_rangeSliderDuration;
     std::vector<videoInfo> m_fileList;
     QString m_fileInfo;
 };

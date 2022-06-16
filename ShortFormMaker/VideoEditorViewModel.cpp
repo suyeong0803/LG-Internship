@@ -21,15 +21,15 @@ void VideoEditorViewModel::setInputInfo(QString str)
     std::string res=test->getStr(str.toStdString());
     m_inputInfo = QString(res.c_str());
     emit this->inputInfoChanged();
-    setRangeSlider(0,4.45);
+
+    setRangeSlider(208645);
     setFileList(res.c_str());
     delete test;
 }
 
-void VideoEditorViewModel::setRangeSlider(double from,double to)
+void VideoEditorViewModel::setRangeSlider(double duration)
 {
-    m_rangeSliderFrom=from;
-    m_rangeSliderTo=to;
+    m_rangeSliderDuration=duration;
     emit this->rangeSliderChanged();
 }
 
@@ -37,13 +37,17 @@ QString VideoEditorViewModel::inputInfo() {
     return m_inputInfo;
 }
 
-double VideoEditorViewModel::fromRangeSlider(){
-    return m_rangeSliderFrom;
+double VideoEditorViewModel::rangeSliderDuration(){
+    return m_rangeSliderDuration;
 }
 
-double VideoEditorViewModel::toRangeSlider(){
-    return m_rangeSliderTo;
-}
+//double VideoEditorViewModel::fromRangeSlider(){
+//    return m_rangeSliderFrom;
+//}
+
+//double VideoEditorViewModel::toRangeSlider(){
+//    return m_rangeSliderTo;
+//}
 
 void VideoEditorViewModel::setFileList(QString str){
     Test* test=new Test();
@@ -92,4 +96,3 @@ QString VideoEditorViewModel::fileInfo(){
 //{
 //    return m_fileList.at(index).duration;
 //}
-
