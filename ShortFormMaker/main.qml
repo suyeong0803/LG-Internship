@@ -72,9 +72,9 @@ Window {
                 console.log('Folder Model Loaded')
                 console.log("Folder list contains ", folderModel.count, "elements:")
                 for (var i = 0; i < folderModel.count; ++i) {
-                    console.log("\t",i,folderModel.get(i,"fileName"))
-                    console.log("\t", i, folderModel.get(i, "fileURL"))
-                    videoPlayer.videoList.append({"source": folderModel.get(i,"fileUrl").toString(),"name":folderModel.get(i,"fileName")});
+//                    console.log("\t",i,folderModel.get(i,"fileName"))
+//                    console.log("\t", i, folderModel.get(i, "fileURL"))
+//                    videoPlayer.videoList.append({"source": folderModel.get(i,"fileUrl").toString(),"name":folderModel.get(i,"fileName")});
                 }
             }
         }
@@ -101,7 +101,7 @@ Window {
 
     Connections{
         target:VideoEditorViewModel
-        onInputInfoChanged:{
+        function onInputInfoChanged(){
             inputInfo.text=VideoEditorViewModel.inputInfo()
 //            inputInfo.text=VideoEditorViewModel.fileInfo()
             //            listView.model=VideoEditorViewModel.getListSize();
@@ -109,7 +109,7 @@ Window {
             videoInfoList(VideoEditorViewModel.fileInfo());
 //            inputInfo.text=videoInfoList(VideoEditorViewModel.fileInfo());
         }
-        onRangeSliderChanged:{
+        function onRangeSliderChanged(){
             //            fromLabel.text=VideoEditorViewModel.fromRangeSlider();
             console.log("시간"+durationTime(VideoEditorViewModel.rangeSliderDuration()));
             toLabel.text=durationTime(VideoEditorViewModel.rangeSliderDuration());
@@ -147,22 +147,21 @@ Window {
             //            video.position/video.duration
 //            videoPlayer.videoPlayerPosition=rangeSlider.first.value*VideoEditorViewModel.rangeSliderDuration();
             var firstValue=rangeSlider.first.value*VideoEditorViewModel.rangeSliderDuration();
-//            console.log(firstValue+"값값")
             videoPlayer.video.position=firstValue;
-            console.log(videoPlayer.video.position);
+            console.log("first value position: "+videoPlayer.video.position);
+            console.log("video duration: "+videoPlayer.video.duration)
             if(firstValue>videoPlayer.video.duration){
                 for(var i=0;i<videoPlayer.videoListModel.count;i++){
                     if(videoPlayer.videoListModel.get(i).startTime<=firstValue && firstValue<videoPlayer.videoListModel.get(i).endTime){
                         videoPlayer.video.source=videoPlayer.videoListModel.get(i).source.toString().toLowerCase();
-                        videoPlayer.video.paused();
+                        console.log(videoPlayer.video.source);
+                        videoPlayer.video.play();
+//                        videoPlayer.video.paused();
                         videoPlayer.video.position=firstValue-videoPlayer.videoListModel.get(i).startTime;
                     }
                 }
             }
 
-
-
-            console.log()
             //            video.play();
             //            videoPlayerPosition=rangeSlider.first.value*VideoEditorViewModel.rangeSliderDuration();
             //            video.setPosition(rangeSlider.first.value*VideoEditorViewModel.rangeSliderDuration());

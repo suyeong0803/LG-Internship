@@ -22,7 +22,8 @@ void VideoEditorViewModel::setInputInfo(QString str)
     m_inputInfo = QString(res.c_str());
     emit this->inputInfoChanged();
 
-    setRangeSlider(208645);
+//    setRangeSlider(208645);
+    setRangeSlider(365233);
     setFileList(res.c_str());
     delete test;
 }

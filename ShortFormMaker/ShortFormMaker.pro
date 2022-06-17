@@ -1,5 +1,4 @@
 QT += quick
-
 SOURCES += \
         VideoEditorViewModel.cpp \
         main.cpp \
@@ -29,3 +28,5 @@ HEADERS += \
     VideoEditorViewModel.h \
     VideoInfo.h \
     test.h
+
+

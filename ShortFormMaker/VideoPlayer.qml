@@ -18,7 +18,8 @@ Rectangle {
         Video {
             id: video
             anchors.fill:parent
-            source: "file:///C:/Users/yeeun/Desktop/VideoSample/videosample1/sample1.mp4"
+            source: "file:///D:/videosample/sample1.mp4"
+//            source: "file:///c:/users/yeeun/desktop/VideoSample/VideoSample1/sample1.mp4"
             anchors.rightMargin: 0
             anchors.bottomMargin: 0
 //            loops:1
@@ -45,7 +46,13 @@ Rectangle {
             onPlaying:{
                 console.log("playing")
                 console.log("플레이중"+video.source)
-//                console.log(video.duration)
+                for(var i=0;i<model.count;i++){
+                    if(i>0 && video.source.toString().toLowerCase()==model.get(i).source.toString().toLowerCase()){
+                        video.pause();
+                    }
+                }
+
+                console.log(video.duration)
             }
             onPaused:{
                 console.log("paused")
@@ -71,22 +78,46 @@ Rectangle {
             video.play();
         }
 
-    ListModel {//리스트뷰에 담은 데이터들을 선언한다.
+//    ListModel {//리스트뷰에 담은 데이터들을 선언한다.
+//        id:model
+//        ListElement{
+//            source:"file:///c:/Users/yeeun/Desktop/VideoSample/videosample1/sample1.mp4"
+//            startTime:0
+//            endTime:125952
+//        }
+//        ListElement{
+//            source:"file:///c:/Users/yeeun/Desktop/VideoSample/videosample1/sample2.mp4"
+//            startTime:125952
+//            endTime:156478
+//        }
+//        ListElement{
+//            source:"file:///c:/Users/yeeun/Desktop/VideoSample/videosample1/sample3.mp4"
+//            startTime:156478
+//            endTime:208645
+//        }
+//    }
+
+    ListModel{
         id:model
         ListElement{
-            source:"file:///c:/Users/yeeun/Desktop/VideoSample/videosample1/sample1.mp4"
+            source:"file:///D:/videosample/sample1.mp4"
             startTime:0
-            endTime:125952
+            endTime:91258
         }
         ListElement{
-            source:"file:///c:/Users/yeeun/Desktop/VideoSample/videosample1/sample2.mp4"
-            startTime:125952
-            endTime:156478
+            source:"file:///D:/videosample/sample2.mp4"
+            startTime:91258
+            endTime:182049
         }
         ListElement{
-            source:"file:///c:/Users/yeeun/Desktop/VideoSample/videosample1/sample3.mp4"
-            startTime:156478
-            endTime:208645
+            source:"file:///D:/videosample/sample3.mp4"
+            startTime:182049
+            endTime:273841
+        }
+        ListElement{
+            source:"file:///D:/videosample/sample4.mp4"
+            startTime:273841
+            endTime:365233
         }
     }
 
@@ -119,7 +150,7 @@ Rectangle {
                 }
             }
             console.log(model.get(index).startTime)
-//            video.setPosition(rangeSlider.first.value*VideoEditorViewModel.rangeSliderDuration()-model.get(i).startTime)
+            video.setPosition(rangeSlider.first.value*VideoEditorViewModel.rangeSliderDuration()-model.get(index).startTime)
             video.play();
         }
     }
