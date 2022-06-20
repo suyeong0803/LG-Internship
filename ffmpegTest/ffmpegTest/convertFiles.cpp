@@ -1,11 +1,16 @@
 #include "Editor.h"
 
-/*
-
-    사용자에게 영상을 보여주기 위해 전체 파일 변환
+/**
+*   @brief mpeg2 파일 mpeg4로 변환
+    @detail 사용자에게 영상을 보여주기 위해 전체 파일 변환
     -> 내부 영상은 그대로 mpeg2로 두고 컨테이너만 mpeg4로 변환
     -> 내부 영상까지 mpeg4로 변환하게 되면 시간이 오래 걸리고 용량이 커짐
 
+    @param in_file  : string형 in_file 변수 -> 변환할 파일 경로
+    @param out_file : string형 out_file 변수 -> 변환한 파일 경로
+
+    @return SUCCESS or ErrorCode
+    @remark 주의사항 없음
 */
 
 int Editor::convert(std::string in_fileName, std::string out_fileName)
@@ -13,30 +18,42 @@ int Editor::convert(std::string in_fileName, std::string out_fileName)
     const AVOutputFormat* ofmt = NULL;
     AVFormatContext* ifmt_ctx = NULL, * ofmt_ctx = NULL;
     AVPacket* pkt = NULL;
-    int ret, i;
+    int ret, i, result = SUCCESS;
     int stream_index = 0;
     int* stream_mapping = NULL;
     int stream_mapping_size = 0;
 
     pkt = av_packet_alloc();
-    if (!pkt) 
-        return ERR_PACKETALLOC;
+    if (!pkt)
+    {
+        result = ERR_PACKETALLOC;
+        goto end;
+    }
 
-    if ((ret = avformat_open_input(&ifmt_ctx, in_fileName.c_str(), 0, 0)) < 0) 
-        return ERR_INPUTOPEN;
+    if ((ret = avformat_open_input(&ifmt_ctx, in_fileName.c_str(), 0, 0)) < 0)
+    {
+        result = ERR_INPUTOPEN;
+        goto end;
+    }
 
-
-    if ((ret = avformat_find_stream_info(ifmt_ctx, 0)) < 0) 
-        return ERR_STREAMINFO;
+    if ((ret = avformat_find_stream_info(ifmt_ctx, 0)) < 0)
+    {
+        result = ERR_STREAMINFO;
+        goto end;
+    }
     
     avformat_alloc_output_context2(&ofmt_ctx, NULL, NULL, out_fileName.c_str());
-    if (!ofmt_ctx) 
-        return ERR_OUTPUTCREATE;
+    if (!ofmt_ctx)
+    {
+        result = ERR_OUTPUTCREATE;
+        goto end;
+    }
 
     stream_mapping_size = ifmt_ctx->nb_streams;
     stream_mapping = new int(stream_mapping_size * sizeof(*stream_mapping));
     if (!stream_mapping) {
         ret = AVERROR(ENOMEM);
+        goto end;
         return -1;
     }
 
@@ -57,25 +74,37 @@ int Editor::convert(std::string in_fileName, std::string out_fileName)
         stream_mapping[i] = stream_index++;
 
         out_stream = avformat_new_stream(ofmt_ctx, NULL);
-        if (!out_stream) 
-            return ERR_OUTPUTSTREAM;
+        if (!out_stream)
+        {
+            result = ERR_OUTPUTSTREAM;
+            goto end;
+        }
 
         ret = avcodec_parameters_copy(out_stream->codecpar, in_codecpar);
-        if (ret < 0) 
-            return ERR_COPYCODEC;
-       
+        if (ret < 0)
+        {
+            result = ERR_COPYCODEC;
+            goto end;
+        }
+            
         out_stream->codecpar->codec_tag = 0;
     }
 
     if (!(ofmt->flags & AVFMT_NOFILE)) {
         ret = avio_open(&ofmt_ctx->pb, out_fileName.c_str(), AVIO_FLAG_WRITE);
-        if (ret < 0) 
-            return ERR_OUTPUTOPEN;
+        if (ret < 0)
+        {
+            result = ERR_OUTPUTOPEN;
+            goto end;
+        }
     }
 
     ret = avformat_write_header(ofmt_ctx, NULL);
-    if (ret < 0) 
-        return ERR_WRITEHEADER;
+    if (ret < 0)
+    {
+        result = ERR_WRITEHEADER;
+        goto end;
+    }
 
     while (1) {
 
@@ -84,7 +113,9 @@ int Editor::convert(std::string in_fileName, std::string out_fileName)
 
         ret = av_read_frame(ifmt_ctx, pkt);
         if (ret < 0)
+        {
             break;
+        }
 
         in_stream = ifmt_ctx->streams[pkt->stream_index];
         if (pkt->stream_index >= stream_mapping_size ||
@@ -109,28 +140,20 @@ int Editor::convert(std::string in_fileName, std::string out_fileName)
 
         ret = av_interleaved_write_frame(ofmt_ctx, pkt);
         if (ret < 0) {
-            printf("Error muxing packet\n");
             break;
         }
     }
 
     av_write_trailer(ofmt_ctx);
-    //end:
-    //    av_packet_free(&pkt);
-    //
-    //    avformat_close_input(&ifmt_ctx);
-    //
-    //    /* close output */
-    //    if (ofmt_ctx && !(ofmt->flags & AVFMT_NOFILE))
-    //        avio_closep(&ofmt_ctx->pb);
-    //    avformat_free_context(ofmt_ctx);
-    //
-    //    av_freep(&stream_mapping);
-    //
-    //    if (ret < 0 && ret != AVERROR_EOF) {
-    //        printf("Error occurred: %d\n", ret);
-    //        return 1;
-    //    }
+    end:
+        av_packet_free(&pkt);
+    
+        avformat_close_input(&ifmt_ctx);
+    
+        /* close output */
+        if (ofmt_ctx && !(ofmt->flags & AVFMT_NOFILE))
+            avio_closep(&ofmt_ctx->pb);
+        avformat_free_context(ofmt_ctx);
 
-    return SUCCESS;
+    return result;
 }

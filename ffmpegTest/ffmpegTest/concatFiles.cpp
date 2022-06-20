@@ -1,5 +1,57 @@
 #include "Editor.h"
 
+/**
+	@brief 시스템 콜로 호출하기 위한 파일 경로가 저장된 텍스트 파일을 만든다.
+
+	@param startIndex : int형 startIndex 변수 -> 병합할 시작 인덱스
+	@param endIndex : int형 endIndex 변수 -> 병합할 마지막 인덱스
+
+	@return 리턴값 없음
+	@remark 주의사항 없음
+*/
+
+void makeTXTFile(int startIndex, int endIndex) {
+	std::ofstream writeFile("D:\\list.txt");
+	for (int i = startIndex; i <= endIndex; i++)
+	{
+		writeFile << "file 'D:\\convert\\output_convert" + std::to_string(i) + ".mp4'";
+		writeFile << std::endl;
+	}
+	writeFile.close();
+
+}
+
+/**
+*	@brief 여러 개 파일 하나로 병합
+	@detail 사용자가 원하는 구간에 따라 startIndex, endIndex를 찾고 병합
+	-> system call 사용해 구현
+	-> 원본 파일 자체의 pts, dts 값이 일정하게 증가하지 않아 직접 구현이 어려움
+	-> 파일이 두 개 이상이 되면서 두 번째 파일의 첫번째 pts, dts 값이 첫번째 파일의 마지막 pts, dts보다 작아질 수 있어 병합에 오류 발생
+
+	@param startTime : int64_t형 startTime 변수 -> 사용자가 입력한 시작 시간
+	@param endTime : int64_t형 endTime 변수 -> 사용자가 입력한 종료 시간
+
+	@return startIndex
+	@remark 주의사항 없음
+*/
+
+int Editor::concat(int64_t startTime, int64_t endTime)
+{
+	int startIndex = -1, endIndex = -1;
+	for (int i = 0; i < m_videoInfos.size(); i++)
+	{
+		if (startIndex != -1 && endIndex != -1) break;
+		if (m_videoInfos[i].startTime <= startTime && startTime < m_videoInfos[i].endTime ) startIndex = i;
+		if (m_videoInfos[i].startTime < endTime && endTime <= m_videoInfos[i].endTime) endIndex = i;
+	}
+	makeTXTFile(startIndex, endIndex);
+	std::string command = "ffmpeg -f concat -safe 0 -i D:\\list.txt -c copy -safe 0 D:\\output_concat.mp4";
+	system(command.c_str());
+	std::cout << startIndex << " " << endIndex << std::endl;
+
+	return startIndex;
+}
+
 //void concat(int startIndex, int endIndex)
 //{
 //	AVOutputFormat* ofmt = NULL;
@@ -204,40 +256,3 @@
 //	avio_close(ofmt_ctx->pb);
 //	av_free(ofmt_ctx);
 //}
-
-/*
- 
-	사용자가 원하는 구간에 따라 startIndex, endIndex를 찾고 병합
-	-> system call 사용해 구현
-	-> 원본 파일 자체의 pts, dts 값이 일정하게 증가하지 않아 직접 구현이 어려움
-	-> 파일이 두 개 이상이 되면서 두 번째 파일의 첫번째 pts, dts 값이 첫번째 파일의 마지막 pts, dts보다 작아질 수 있어 병합에 오류 발생
-
-*/
-
-void makeTXTFile(int startIndex, int endIndex) {
-	std::ofstream writeFile("D:\\list.txt");
-	for (int i = startIndex; i <= endIndex; i++)
-	{
-		writeFile << "file 'D:\\convert\\output_convert" + std::to_string(i) + ".mp4'";
-		writeFile << std::endl;
-	}
-	writeFile.close();
-
-}
-
-int Editor::concat(int64_t startTime, int64_t endTime)
-{
-	int startIndex = -1, endIndex = -1;
-	for (int i = 0; i < m_folder.size(); i++)
-	{
-		if (startIndex != -1 && endIndex != -1) break;
-		if (m_folder[i].startTime <= startTime && startTime <= m_folder[i].endTime) startIndex = i;
-		if (m_folder[i].startTime <= endTime && endTime <= m_folder[i].endTime) endIndex = i;
-	}
-
-	makeTXTFile(startIndex, endIndex);
-	std::string command = "ffmpeg -f concat -safe 0 -i D:\\list.txt -c copy -safe 0 D:\\output_concat.mp4";
-	system(command.c_str());
-
-	return startIndex;
-}

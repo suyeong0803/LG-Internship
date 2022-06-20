@@ -1,3 +1,8 @@
+/**
+	@file videoInfo.h
+	@brief video information for editing
+*/
+
 #pragma once
 #include <stdio.h>
 #include <string>

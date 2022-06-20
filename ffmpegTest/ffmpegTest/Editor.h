@@ -1,3 +1,8 @@
+/**
+	@file Editor.h
+	@brief video editor app
+*/
+
 #pragma once
 extern "C"
 {
@@ -16,6 +21,7 @@ extern "C"
 #include <filesystem>
 #include <fstream>
 #include <vector>
+#include <Windows.h>
 
 #include "videoInfo.h"
 
@@ -39,6 +45,7 @@ extern "C"
 #define ERR_COPYCODEC		-11		// codec의 내용 outstream에 복사 실패
 #define ERR_EMPTYFOLDER		-12		// 폴더에 파일이 없을 경우
 #define ERR_NOTEXIST		-13		// 잘못된 폴더 경로일 경우
+#define ERR_MAXFILES		-14		// 폴더 내 파일 개수가 50개 이상일 경우
 #define ERR_UNDEFINED		-999	// 그 외
 
 #define ERR_SAVEINFO		-1001	// 사용자에게 오류 위치 보여주기 위해 하나로 통합
@@ -50,22 +57,25 @@ extern "C"
 
 class Editor
 {
+	// 사용자 입력
+	std::string	m_inputPath;		// save
 	int64_t m_startTime, m_endTime;	// concat
-	std::string	m_outputPath;	// split
+	std::string	m_outputPath;		// split
+
+	// split 사용
 	int m_startIndex;
-	
-public:
-	std::vector<videoInfo> m_folder;
+
+	std::vector<videoInfo> m_videoInfos;
 
 public:
 	Editor() {};
 	~Editor() {};
 
-	int saveInfo(std::string filePath);
+	int saveInfo(std::string folderPath);
 	int convert(std::string in_fileName, std::string out_fileName);
 
 	int concat(int64_t startTime, int64_t endTime);
-	int split(int64_t startFile, int64_t startTime, int64_t endTime, std::string out_fileName);
+	int split(int64_t startIndex, int64_t startTime, int64_t endTime, std::string out_fileName);
 
 	void remove();
 
@@ -75,9 +85,22 @@ public:
 	void setEndTime(int64_t endTime) { this->m_endTime = endTime; }
 	int getEndTime() { return m_endTime; }
 
+	void setInputPath(std::string	inputPath) { this->m_inputPath = inputPath; }
+	std::string getInputPath() { return m_inputPath; }
+
 	void setOutputPath(std::string	outputPath) { this->m_outputPath = outputPath; }
 	std::string getOutputPath() { return m_outputPath; }
 
 	void setIndex(int64_t startIndex) { this->m_startIndex = startIndex; }
 	int getIndex() { return m_startIndex; }
+
+	videoInfo getInfo(int index)
+	{
+		return m_videoInfos[index];
+	}
+
+	int getInfoSize()
+	{
+		return m_videoInfos.size();
+	}
 };

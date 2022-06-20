@@ -1,6 +1,41 @@
-﻿  Controller.cpp
+﻿  concatFiles.cpp
 D:\ffmpeg\include\libavutil\rational.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
-D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(73,30): warning C4244: 'return': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(76,28): warning C4244: 'return': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(81,59): warning C4244: '=': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  ffmpegTest.vcxproj -> D:\2022-05-yeeun.shim\ffmpegTest\x64\Debug\ffmpegTest.exe
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(82,30): warning C4244: 'return': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(85,28): warning C4244: 'return': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(90,59): warning C4244: '=': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(100,1): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  convertFiles.cpp
+D:\ffmpeg\include\libavutil\rational.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(82,30): warning C4244: 'return': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(85,28): warning C4244: 'return': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(90,59): warning C4244: '=': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(100,1): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\convertFiles.cpp(62,19): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  removeFiles.cpp
+D:\ffmpeg\include\libavutil\rational.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(82,30): warning C4244: 'return': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(85,28): warning C4244: 'return': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(90,59): warning C4244: '=': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(100,1): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+  Controller.cpp
+D:\ffmpeg\include\libavutil\rational.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(82,30): warning C4244: 'return': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(85,28): warning C4244: 'return': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(90,59): warning C4244: '=': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(100,1): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  saveVideoInfo.cpp
+D:\ffmpeg\include\libavutil\rational.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(82,30): warning C4244: 'return': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(85,28): warning C4244: 'return': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(90,59): warning C4244: '=': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(100,1): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  splitFiles.cpp
+D:\ffmpeg\include\libavutil\rational.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(82,30): warning C4244: 'return': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(85,28): warning C4244: 'return': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(90,59): warning C4244: '=': 'int64_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\Editor.h(100,1): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\2022-05-yeeun.shim\ffmpegTest\ffmpegTest\splitFiles.cpp(61,16): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  코드를 생성하고 있습니다...
+  ffmpegTest.vcxproj -> D:\2022-05-yeeun.shim\ffmpegTest\x64\Debug\ffmpegTest.lib

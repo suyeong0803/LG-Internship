@@ -18,9 +18,6 @@
     <ClCompile Include="saveVideoInfo.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="saveThumbnail.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="splitFiles.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
