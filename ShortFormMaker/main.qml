@@ -64,31 +64,11 @@ Window {
         onFolderChanged:{
             console.log(folder);
             VideoEditorViewModel.open(folder);
-            folderModel.folder=folder;
+//            folderModel.folder=folder;
             videoPlayer.video.pause();
         }
 
 
-    }
-
-    FolderListModel {
-        id: folderModel
-        /// Put here URL of folder with videos
-        folder: "file:" + "/home/tro/Videos/"
-        /// Put a list of file name filters
-        nameFilters: ["*.mp4"]
-        showDirs: false
-        onStatusChanged: {
-            if (folderModel.status == FolderListModel.Ready) {
-                console.log('Folder Model Loaded')
-                console.log("Folder list contains ", folderModel.count, "elements:")
-                for (var i = 0; i < folderModel.count; ++i) {
-                    //                    console.log("\t",i,folderModel.get(i,"fileName"))
-                    //                    console.log("\t", i, folderModel.get(i, "fileURL"))
-                    //                    videoPlayer.videoList.append({"source": folderModel.get(i,"fileUrl").toString(),"name":folderModel.get(i,"fileName")});
-                }
-            }
-        }
     }
 
     function durationTime(duration){
@@ -96,15 +76,6 @@ Window {
         var ms = (duration / 1000 - m * 60).toFixed(1)
         return `${m}:${ms.padStart(4, 0)}`
     }
-
-    //    function videoInfoList(list){
-    //        console.log("실행")
-    //        console.log("테스트: "+list)
-    //        for(var i=0;i<list.size();i++){
-    //            console.log(list[i].getVideoInfoName());
-    ////            list[i].getVideoInfoName();
-    //        }
-    //    }
 
     function test(){
         console.log("Test")
@@ -132,10 +103,6 @@ Window {
             }
 
             saveDialog.open();
-            //            console.log(videoPlayer1.video.source);
-            //            console.log(savejsonog.currentFile)
-            //            VideoEditorViewModel.setExcuteInfo(rangeSlider.first.value*VideoEditorViewModel.rangeSliderDuration(),rangeSlider.second.value*VideoEditorViewModel.rangeSliderDuration())
-            //            videoPlayer1.video.source=saveDialog.currentFile
         }
     }
 
@@ -143,34 +110,53 @@ Window {
         target:VideoEditorViewModel
         function onInputInfoChanged(){
             inputInfo.text=VideoEditorViewModel.inputInfo()
-            var list=VideoEditorViewModel.fileInfo2();
-            console.log(list);
-
-            for (var prop in list) {
-                        console.log("Object item:", prop, "=", list[prop])
-                    }
-            console.log(list.length);
+            var list=VideoEditorViewModel.jsonInfo()
+            console.log("list length "+list.length);
+            videoPlayer.video.source="file:///"+list[0].Path;
             for(var i=0;i<list.length;i++){
-                console.log("리스튼데여"+i);
-                console.log(list.get(i).startTime);
-                videoPlayer.videoListModel.append({"source": "file:///D:/conver/output_convert"+i+".mp4","startTime":list.get(i).startTime,"endTime":list.get(i).endTime});
+                console.log("startTime: "+list[i].startTime);
+                console.log("endTime: "+list[i].endTime);
+                console.log("path: "+list[i].Path);
+                console.log(videoPlayer.videoListModel.count)
+                videoPlayer.videoListModel.append({"source": "file:///"+list[i].Path,"startTime":list[i].startTime,"endTime":list[i].endTime});
+//                videoPlayer.videoListModel.append({"source": "file:///D:/convert/output_convert"+i+".mp4","startTime":list[i].startTime,"endTime":list.get[i].endTime});
             }
+
 
             //            inputInfo.text=VideoEditorViewModel.fileInfo()
             //            listView.model=VideoEditorViewModel.getListSize();
-
-//            test();
-            //            videoInfoList(VideoEditorViewModel.fileInfo());
             //            inputInfo.text=videoInfoList(VideoEditorViewModel.fileInfo());
         }
         function onRangeSliderChanged(){
-//                        fromLabel.text=VideoEditorViewModel.fromRangeSlider();
             console.log("시간"+durationTime(VideoEditorViewModel.rangeSliderDuration()));
             toLabel.text=durationTime(VideoEditorViewModel.rangeSliderDuration());
         }
         function onOutputInfoChanged(){
             console.log("output")
             outputInfo.text=VideoEditorViewModel.outputInfo()
+        }
+        function onErrorDetected(error){
+            console.log("error: "+error);
+            if(error === -1001){
+                popupText.text="파일 열기에 실패하였습니다."
+            }
+            else if(error === -1002){
+                popupText.text="파일 변환에 실패하였습니다."
+            }
+            else if(error === -1003){
+                popupText.text="파일 병합에 실패하였습니다."
+                videoPlayer1.video.source="";
+                console.log(videoPlayer1.video.source="")
+            }
+            else if(error === -1004){
+                popupText.text="파일 자르기에 실패하였습니다."
+                videoPlayer1.video.source="";
+            }
+            else if(error === -12){
+                popupText.text="폴더에 파일이 없습니다."
+            }
+
+            popup.open();
         }
 
     }
@@ -276,6 +262,8 @@ Window {
             console.log("first value position: "+videoPlayer.video.position);
             console.log("video duration: "+videoPlayer.video.duration)
             if(firstValue>videoPlayer.video.duration){
+                console.log("video list count"+videoPlayer.videoListModel.count);
+                console.log("video source: "+videoPlayer.video.source)
                 for(var i=0;i<videoPlayer.videoListModel.count;i++){
                     if(videoPlayer.videoListModel.get(i).startTime<=firstValue && firstValue<videoPlayer.videoListModel.get(i).endTime){
                         videoPlayer.video.source=videoPlayer.videoListModel.get(i).source.toString().toLowerCase();
@@ -417,6 +405,8 @@ Window {
                 popup.close();
             }
         }
+
+
     }
 
     Image {
@@ -425,19 +415,9 @@ Window {
         y: 353
         width: 53
         height: 44
-        source: "file:///D:/github_0620/Shortform/ShortFormMaker/right-arrow.png"
+        source: "file:///D:/gitlab_0617/2022-05-yeeun.shim/ShortFormMaker/right-arrow.png"
         fillMode: Image.PreserveAspectFit
     }
-
-
-
-
-
-
-
-
-
-
 
 }
 

@@ -19,7 +19,7 @@ Rectangle {
             id: video
             anchors.fill:parent
 //            source: "file:///D:/videosample/sample1.mp4"
-            source: "file:///c:/users/yeeun/desktop/VideoSample/VideoSample1/sample1.mp4"
+//            source: "file:///c:/users/yeeun/desktop/VideoSample/VideoSample1/sample1.mp4"
             anchors.rightMargin: 0
             anchors.bottomMargin: 0
 //            loops:1
@@ -78,27 +78,27 @@ Rectangle {
             video.play();
         }
 
-    ListModel {//리스트뷰에 담은 데이터들을 선언한다.
-        id:model
-        ListElement{
-            source:"file:///c:/Users/yeeun/Desktop/VideoSample/videosample1/sample1.mp4"
-            startTime:0
-            endTime:117312
-        }
-        ListElement{
-            source:"file:///c:/Users/yeeun/Desktop/VideoSample/videosample1/sample2.mp4"
-            startTime:117312
-            endTime:208982
-        }
-        ListElement{
-            source:"file:///c:/Users/yeeun/Desktop/VideoSample/videosample1/sample3.mp4"
-            startTime:208982
-            endTime:389526
-        }
-    }
-
-//    ListModel{
+//    ListModel {//리스트뷰에 담은 데이터들을 선언한다.
 //        id:model
+//        ListElement{
+//            source:"file:///c:/Users/yeeun/Desktop/VideoSample/videosample1/sample1.mp4"
+//            startTime:0
+//            endTime:117312
+//        }
+//        ListElement{
+//            source:"file:///c:/Users/yeeun/Desktop/VideoSample/videosample1/sample2.mp4"
+//            startTime:117312
+//            endTime:208982
+//        }
+//        ListElement{
+//            source:"file:///c:/Users/yeeun/Desktop/VideoSample/videosample1/sample3.mp4"
+//            startTime:208982
+//            endTime:389526
+//        }
+//    }
+
+    ListModel{
+        id:model
 //        ListElement{
 //            source:"file:///D:/videosample/sample1.mp4"
 //            startTime:0
@@ -119,7 +119,7 @@ Rectangle {
 //            startTime:273841
 //            endTime:365233
 //        }
-//    }
+    }
 
     Slider {
         id: slider
