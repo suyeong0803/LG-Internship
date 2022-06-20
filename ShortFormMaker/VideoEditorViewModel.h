@@ -1,6 +1,7 @@
 #ifndef VIDEOEDITORVIEWMODEL_H
 #define VIDEOEDITORVIEWMODEL_H
 
+#include <QJsonArray>
 #include <QObject>
 #include <vector>
 #include "VideoInfo.h"
@@ -17,30 +18,36 @@ class VideoEditorViewModel : public QObject
 public:
     explicit VideoEditorViewModel(QObject* parent = nullptr);
     virtual ~VideoEditorViewModel();
-        //void setInputInfo(QString str);
-        Q_INVOKABLE void setFileList(QString str);
-        Q_INVOKABLE void setInputInfo(QString str);
-        Q_INVOKABLE QString inputInfo();
-        Q_INVOKABLE void setRangeSlider(double duration);
-        Q_INVOKABLE double rangeSliderDuration();
-//        Q_INVOKABLE double fromRangeSlider();
-//        Q_INVOKABLE double toRangeSlider();
-//        Q_INVOKABLE int getListSize();
-//        Q_INVOKABLE QString getListName(int index);
-//        Q_INVOKABLE QString getListPath(int index);
-//        Q_INVOKABLE double getListDuration(int index);
-        Q_INVOKABLE QString fileInfo();
-//        Q_INVOKABLE void setFileList();
-
+    //void setInputInfo(QString str);
+    Q_INVOKABLE void setFileList(QString str);
+//    Q_INVOKABLE int open(QString str);
+    Q_INVOKABLE void open(QString str);
+    Q_INVOKABLE void excute(int64_t startTime,int64_t endTime,QString savePath);
+    Q_INVOKABLE QString inputInfo();
+    Q_INVOKABLE void setRangeSlider(int64_t duration);
+    Q_INVOKABLE int64_t rangeSliderDuration();
+    Q_INVOKABLE QString outputInfo();
+    Q_INVOKABLE QVector<videoInfo> fileInfo();
+    Q_INVOKABLE int result();
+//    Q_INVOKABLE QJsonArray toJson(const std::vector<videoInfo>& myVec);
+//    Q_INVOKABLE QJsonArray jsonInfo();
+    Q_INVOKABLE QVariant fileInfo2();
 signals:
     void folderChanged();
     void inputInfoChanged();
     void rangeSliderChanged();
+    void outputInfoChanged();
 private:
     QString m_inputInfo;
-    double m_rangeSliderDuration;
+    int64_t m_rangeSliderDuration;
     std::vector<videoInfo> m_fileList;
-    QString m_fileInfo;
+    QString m_outputInfo;
+    QVector<videoInfo> m_fileInfo;
+    QVariant m_fileInfo2;
+//    QJsonArray m_jsonInfo;
+    int m_result;
+
+//    QList m_file
 };
 
 #endif // VIDEOEDITORVIEWMODEL_H

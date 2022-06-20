@@ -1,6 +1,9 @@
 QT += quick
+
 SOURCES += \
+        Controller.cpp \
         VideoEditorViewModel.cpp \
+        interface.cpp \
         main.cpp \
         test.cpp
 
@@ -21,12 +24,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    Test.qml \
     Timeline.qml \
-    VideoPlayer.qml
+    VideoPlayer.qml \
+    right-arrow.png
 
 HEADERS += \
+    Controller.h \
+    Editor.h \
     VideoEditorViewModel.h \
-    VideoInfo.h \
-    test.h
-
-
+    interface.h \
+    test.h \
+    videoInfo.h
