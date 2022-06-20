@@ -18,6 +18,7 @@
     <ClCompile Include="saveVideoInfo.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="splitFiles.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -33,12 +34,36 @@
     <ClCompile Include="removeFiles.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+=======
+    <ClCompile Include="saveThumbnail.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="splitFiles.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="saveInfo.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="concatFiles.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="concatFiles.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+>>>>>>> 11cd1f6bdb032eccbfb743d8e3f9b1a0d05968a5
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="videoInfo.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="Editor.h">
+=======
+    <ClInclude Include="splitFiles.h">
+>>>>>>> 11cd1f6bdb032eccbfb743d8e3f9b1a0d05968a5
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

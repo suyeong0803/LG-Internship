@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "Editor.h"
 
 int main()
@@ -47,4 +48,22 @@ int main()
 
 	Sleep(1);
 	videoEditor->remove();
+=======
+#include <iostream>
+#include <vector>
+
+#include "videoInfo.h"
+#include "saveInfo.h"
+#include "concatFiles.h"
+#include "splitFiles.h"
+
+int main()
+{
+	std::vector<videoInfo> folder = std::vector<videoInfo>();
+	folder = save("test");
+	//concat(folder);
+
+	int start_time, end_time;
+	split(15, 45, "test\\sample-mp4-file.mp4");
+>>>>>>> 11cd1f6bdb032eccbfb743d8e3f9b1a0d05968a5
 }
