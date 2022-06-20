@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include "Editor.h"
 
 int main()
@@ -18,16 +17,16 @@ int main()
 		return ERR_SAVEINFO;
 	}
 
-	//std::filesystem::create_directory("D:\\convert");
-	//for (int i = 0; i < videoEditor->getInfoSize(); i++)
-	//{
-	//  result = videoEditor->convert(videoEditor->getInfo(i).m_path, "D:\\convert\\output_convert" + std::to_string(i) + ".mp4");
-	//	if (result != SUCCESS)
-	//	{
-	//		if (result == ERR_INPUTOPEN) return ERR_INPUTOPEN;
-	//		return ERR_CONVERT;
-	//	}
-	//}
+	std::filesystem::create_directory("D:\\convert");
+	for (int i = 0; i < videoEditor->getInfoSize(); i++)
+	{
+	  result = videoEditor->convert(videoEditor->getInfo(i).m_path, "D:\\convert\\output_convert" + std::to_string(i) + ".mp4");
+		if (result != SUCCESS)
+		{
+			if (result == ERR_INPUTOPEN) return ERR_INPUTOPEN;
+			return ERR_CONVERT;
+		}
+	}
 
 	int64_t startTime = 650000, endTime = 3200000; // -> user
 	//int64_t startTime = videoEditor->getStartTime(), endTime = videoEditor->getEndTime(); // -> user
@@ -48,22 +47,4 @@ int main()
 
 	Sleep(1);
 	videoEditor->remove();
-=======
-#include <iostream>
-#include <vector>
-
-#include "videoInfo.h"
-#include "saveInfo.h"
-#include "concatFiles.h"
-#include "splitFiles.h"
-
-int main()
-{
-	std::vector<videoInfo> folder = std::vector<videoInfo>();
-	folder = save("test");
-	//concat(folder);
-
-	int start_time, end_time;
-	split(15, 45, "test\\sample-mp4-file.mp4");
->>>>>>> 11cd1f6bdb032eccbfb743d8e3f9b1a0d05968a5
 }
